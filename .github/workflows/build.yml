@@ -1,0 +1,12 @@
+      - name: Build APK (with retries)
+        working-directory: ${{ env.PROJECT_DIR }}
+        run: |
+          for i in 1 2 3 4; do
+            echo "=== Attempt $i ==="
+            if gradle :app:assembleDebug --no-daemon; then
+              exit 0
+            fi
+            echo "Attempt $i failed, waiting before retry..."
+            sleep $((i*45))
+          done
+          exit 1
